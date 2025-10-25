@@ -468,8 +468,11 @@ function doValidate(nodes, facing, seedBlock) {
     };
     groups.set(id, rec);
     for (const k of rec.keys) indexByKey.set(k, id);
+    x.id = id;
   }
   saveGroups();
+
+  scheduleMergeCheck(tmpNew.map(x => x.id).filter(Boolean));
 }
 
 // ===================== Join policy (extended) =====================
@@ -508,6 +511,72 @@ function isProspectiveLayerFull(g, sPros) {
   return true;
 }
 
+function scheduleMergeCheck(ids) {
+  if (!ids.length) return;
+  system.run(() => {
+    for (const id of ids) attemptMergeGroup(id);
+  });
+}
+
+function attemptMergeGroup(id) {
+  const g = groups.get(id);
+  if (!g) return;
+
+  const dim = world.getDimension(g.dimId);
+  if (!dim) return;
+
+  const B = basisFor(g.facing);
+  const mask = maskForSize(g.size);
+
+  for (const dir of [-1, 1]) {
+    const sNeighbor = dir === -1 ? g.sStart - 1 : g.sEnd + 1;
+    const candidateIds = new Set();
+    let valid = true;
+
+    for (const [uOff, tOff] of mask) {
+      const pos = localToWorld(g.origin, B, sNeighbor, g.uMin + uOff, g.tMin + tOff);
+      const key = `${g.dimId}|${pos.x}|${pos.y}|${pos.z}`;
+      const otherId = indexByKey.get(key);
+      if (!otherId || otherId === id) { valid = false; break; }
+      candidateIds.add(otherId);
+      if (candidateIds.size > 1) { valid = false; break; }
+    }
+
+    if (!valid || candidateIds.size !== 1) continue;
+
+    const otherId = candidateIds.values().next().value;
+    const h = groups.get(otherId);
+    if (!h) continue;
+    if (h.size !== g.size || h.facing !== g.facing || h.dimId !== g.dimId) continue;
+
+    const Bh = basisFor(h.facing);
+    const maskCheck = maskForSize(g.size);
+    let aligned = true;
+    for (const [uOff, tOff] of maskCheck) {
+      const worldPos = localToWorld(g.origin, B, sNeighbor, g.uMin + uOff, g.tMin + tOff);
+      const localH = worldToLocal(worldPos, h.origin, Bh);
+      const sInt = Math.round(localH.s);
+      const uInt = Math.round(localH.u);
+      const tInt = Math.round(localH.t);
+      if (uInt < h.uMin || uInt >= h.uMin + h.size) { aligned = false; break; }
+      if (tInt < h.tMin || tInt >= h.tMin + h.size) { aligned = false; break; }
+      if (dir === -1) {
+        if (sInt !== h.sEnd) { aligned = false; break; }
+      } else {
+        if (sInt !== h.sStart) { aligned = false; break; }
+      }
+    }
+    if (!aligned) continue;
+
+    const anchorS = dir === -1 ? g.sStart : g.sEnd;
+    const anchorPos = localToWorld(g.origin, B, anchorS, g.uMin, g.tMin);
+    const anchorBlock = dim.getBlock(anchorPos);
+    if (isVault(anchorBlock)) {
+      system.run(() => validateAndApplyFrom(anchorBlock));
+    }
+  }
+}
+
 // ===================== Subscriptions =====================
 world.afterEvents.playerPlaceBlock.subscribe((ev) => {
   const b = ev.block;
@@ -533,11 +602,15 @@ function handlePlacement(b) {
     const insideW = (u >= g.uMin && u < g.uMin + g.size);
     const insideH = (t >= g.tMin && t < g.tMin + g.size);
 
+    let revalidate = false;
+
     if ((extendsFront || extendsBack) && insideW && insideH) {
       // Only when full new layer is completed we merge/extend
       const full = isProspectiveLayerFull(g, s);
-      if (full) { system.run(() => validateAndApplyFrom(b)); }
-      else {
+      if (full) {
+        system.run(() => validateAndApplyFrom(b));
+        revalidate = true; // merging layer should rescan original structure
+      } else {
         // not a full layer: assemble as an independent structure to allow side-by-side growth
         system.run(() => validateIndependentFrom(b));
       }
@@ -546,16 +619,18 @@ function handlePlacement(b) {
       system.run(() => validateIndependentFrom(b));
     }
 
-    // additionally, re-validate the adjacent group to keep it maximal/valid
-    system.run(() => {
-      const anyKey = [...g.keys][0];
-      if (anyKey) {
-        const [dimId, x, y, z] = anyKey.split("|");
-        const dim = world.getDimension(dimId);
-        const blk = dim.getBlock({ x: +x, y: +y, z: +z });
-        if (isVault(blk)) validateAndApplyFrom(blk);
-      }
-    });
+    if (revalidate) {
+      // additionally, re-validate the adjacent group to keep it maximal/valid
+      system.run(() => {
+        const anyKey = [...g.keys][0];
+        if (anyKey) {
+          const [dimId, x, y, z] = anyKey.split("|");
+          const dim = world.getDimension(dimId);
+          const blk = dim.getBlock({ x: +x, y: +y, z: +z });
+          if (isVault(blk)) validateAndApplyFrom(blk);
+        }
+      });
+    }
     return;
   }
 
