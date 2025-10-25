@@ -508,6 +508,72 @@ function isProspectiveLayerFull(g, sPros) {
   return true;
 }
 
+function groupsShouldMerge(g1, g2) {
+  if (!g1 || !g2) return false;
+  if (g1.dimId !== g2.dimId) return false;
+  if (g1.facing !== g2.facing) return false;
+  if (g1.size !== g2.size) return false;
+
+  const B = basisFor(g1.facing);
+  const offsets = [
+    { dx: B.F[0], dy: B.F[1], dz: B.F[2] },
+    { dx: -B.F[0], dy: -B.F[1], dz: -B.F[2] },
+  ];
+  for (const key of g1.keys) {
+    const [, xs, ys, zs] = key.split("|");
+    const x = +xs, y = +ys, z = +zs;
+    for (const { dx, dy, dz } of offsets) {
+      const nk = `${g1.dimId}|${x + dx}|${y + dy}|${z + dz}`;
+      if (g2.keys.has(nk)) return true;
+    }
+  }
+  return false;
+}
+
+function attemptMergeNear(block) {
+  if (!block) return;
+  const dim = block.dimension;
+  const candidateIds = new Set();
+
+  const selfId = indexByKey.get(keyOf(block));
+  if (selfId) candidateIds.add(selfId);
+
+  for (const [dx, dy, dz] of OFFS6) {
+    const nb = dim.getBlock({ x: block.location.x + dx, y: block.location.y + dy, z: block.location.z + dz });
+    if (!nb) continue;
+    const gid = indexByKey.get(keyOf(nb));
+    if (gid) candidateIds.add(gid);
+  }
+
+  const ids = [...candidateIds];
+  for (let i = 0; i < ids.length; i++) {
+    for (let j = i + 1; j < ids.length; j++) {
+      const g1 = groups.get(ids[i]);
+      const g2 = groups.get(ids[j]);
+      if (!groupsShouldMerge(g1, g2)) continue;
+
+      const source = (g1 && g1.keys.values().next().value) || (g2 && g2.keys.values().next().value);
+      if (!source) continue;
+      const [dimId, xs, ys, zs] = source.split("|");
+      try {
+        const d = world.getDimension(dimId);
+        const blk = d.getBlock({ x: +xs, y: +ys, z: +zs });
+        if (isVault(blk)) {
+          validateAndApplyFrom(blk);
+        }
+      } catch { }
+      return;
+    }
+  }
+}
+
+function runValidationWithMerge(fn, block) {
+  system.run(() => {
+    fn();
+    system.run(() => attemptMergeNear(block));
+  });
+}
+
 // ===================== Subscriptions =====================
 world.afterEvents.playerPlaceBlock.subscribe((ev) => {
   const b = ev.block;
@@ -536,14 +602,14 @@ function handlePlacement(b) {
     if ((extendsFront || extendsBack) && insideW && insideH) {
       // Only when full new layer is completed we merge/extend
       const full = isProspectiveLayerFull(g, s);
-      if (full) { system.run(() => validateAndApplyFrom(b)); }
+      if (full) { runValidationWithMerge(() => validateAndApplyFrom(b), b); }
       else {
         // not a full layer: assemble as an independent structure to allow side-by-side growth
-        system.run(() => validateIndependentFrom(b));
+        runValidationWithMerge(() => validateIndependentFrom(b), b);
       }
     } else {
       // touching but not a valid extension -> assemble as an INDEPENDENT structure (do not merge)
-      system.run(() => validateIndependentFrom(b));
+      runValidationWithMerge(() => validateIndependentFrom(b), b);
     }
 
     // additionally, re-validate the adjacent group to keep it maximal/valid
@@ -560,7 +626,7 @@ function handlePlacement(b) {
   }
 
   // No adjacent group -> fresh/isolated component
-  system.run(() => validateAndApplyFrom(b));
+  runValidationWithMerge(() => validateAndApplyFrom(b), b);
 }
 
 // On break: recompute neighbors -> maximal valid partition after damage
