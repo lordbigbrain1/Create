@@ -167,7 +167,7 @@ function floodComponentSameFacing(seed) {
 }
 
 // independent flood (barrier = already registered groups)
-function floodIndependentSameFacing(seed) {
+function floodIndependentSameFacing(seed, allowedGroupIds) {
   const dim = seed.dimension;
   const facing = canonicalFacing(facingOf(seed));
   const stack = [seed];
@@ -182,7 +182,9 @@ function floodIndependentSameFacing(seed) {
     seen.add(kk);
     if (!isVault(b)) continue;
     if (canonicalFacing(facingOf(b)) !== facing) continue;
-    if (indexByKey.has(keyOf(b))) continue; // barrier
+    const key = keyOf(b);
+    const gid = indexByKey.get(key);
+    if (gid && !(allowedGroupIds && allowedGroupIds.has(gid))) continue; // barrier unless allowed
     nodes.push(b);
     for (const [dx, dy, dz] of OFFS6) {
       const nb = dim.getBlock({ x: b.location.x + dx, y: b.location.y + dy, z: b.location.z + dz });
@@ -394,18 +396,18 @@ function validateAndApplyFrom(seedBlock) {
 }
 
 // validate only the independent component (exclude already-registered groups)
-function validateIndependentFrom(seedBlock) {
+function validateIndependentFrom(seedBlock, allowedGroupIds) {
   if (!seedBlock || !isVault(seedBlock)) return;
 
   const rotated = setFacingIfNeeded(seedBlock);
-  if (rotated) { system.run(() => validateIndependentFrom(seedBlock)); return; }
+  if (rotated) { system.run(() => validateIndependentFrom(seedBlock, allowedGroupIds)); return; }
 
-  const { nodes, facing } = floodIndependentSameFacing(seedBlock);
+  const { nodes, facing } = floodIndependentSameFacing(seedBlock, allowedGroupIds);
   if (!nodes.length) return;
 
   let anyChanged = false;
   for (const b of nodes) if (setFacingIfNeeded(b)) anyChanged = true;
-  if (anyChanged) { system.run(() => validateIndependentFrom(seedBlock)); return; }
+  if (anyChanged) { system.run(() => validateIndependentFrom(seedBlock, allowedGroupIds)); return; }
 
   doValidate(nodes, facing, seedBlock);
 }
@@ -488,7 +490,7 @@ function findAdjacentValidGroup(block) {
     const bf = canonicalFacing(facingOf(block));
     if (g.dimId !== block.dimension.id) continue;
     if (bf && bf !== g.facing) continue;
-    return g;
+    return { group: g, id: gid };
   }
   return null;
 }
@@ -572,8 +574,27 @@ function attemptMergeGroup(id) {
     const anchorPos = localToWorld(g.origin, B, anchorS, g.uMin, g.tMin);
     const anchorBlock = dim.getBlock(anchorPos);
     if (isVault(anchorBlock)) {
-      system.run(() => validateAndApplyFrom(anchorBlock));
+      const allow = new Set([id, otherId]);
+      system.run(() => validateIndependentFrom(anchorBlock, allow));
     }
+  }
+}
+
+function revalidateGroupId(id) {
+  const g = groups.get(id);
+  if (!g || !g.keys || g.keys.size === 0) return;
+
+  const anyKey = g.keys.values().next().value;
+  if (!anyKey) return;
+
+  const [dimId, xs, ys, zs] = anyKey.split("|");
+  const dim = world.getDimension(dimId);
+  if (!dim) return;
+
+  const blk = dim.getBlock({ x: +xs, y: +ys, z: +zs });
+  if (isVault(blk)) {
+    const allow = new Set([id]);
+    validateIndependentFrom(blk, allow);
   }
 }
 
@@ -592,8 +613,9 @@ world.afterEvents.playerPlaceBlock.subscribe((ev) => {
 }, { blockTypes: [NET_BLOCK_ID] });
 
 function handlePlacement(b) {
-  const g = findAdjacentValidGroup(b);
-  if (g) {
+  const adj = findAdjacentValidGroup(b);
+  if (adj) {
+    const g = adj.group;
     const loc = toLocalOfGroup(b, g);
     const s = loc.s, u = loc.u, t = loc.t;
 
@@ -605,7 +627,10 @@ function handlePlacement(b) {
     if ((extendsFront || extendsBack) && insideW && insideH) {
       // Only when full new layer is completed we merge/extend
       const full = isProspectiveLayerFull(g, s);
-      if (full) { system.run(() => validateAndApplyFrom(b)); }
+      if (full) {
+        const allow = new Set([adj.id]);
+        system.run(() => validateIndependentFrom(b, allow));
+      }
       else {
         // not a full layer: assemble as an independent structure to allow side-by-side growth
         system.run(() => validateIndependentFrom(b));
@@ -614,22 +639,11 @@ function handlePlacement(b) {
       // touching but not a valid extension -> assemble as an INDEPENDENT structure (do not merge)
       system.run(() => validateIndependentFrom(b));
     }
-
-    // additionally, re-validate the adjacent group to keep it maximal/valid
-    system.run(() => {
-      const anyKey = [...g.keys][0];
-      if (anyKey) {
-        const [dimId, x, y, z] = anyKey.split("|");
-        const dim = world.getDimension(dimId);
-        const blk = dim.getBlock({ x: +x, y: +y, z: +z });
-        if (isVault(blk)) validateAndApplyFrom(blk);
-      }
-    });
     return;
   }
 
   // No adjacent group -> fresh/isolated component
-  system.run(() => validateAndApplyFrom(b));
+  system.run(() => validateIndependentFrom(b));
 }
 
 // On break: recompute neighbors -> maximal valid partition after damage
@@ -637,9 +651,19 @@ world.afterEvents.playerBreakBlock.subscribe((ev) => {
   const dim = ev.block.dimension;
   const { x, y, z } = ev.block.location;
   system.run(() => {
+    const queued = new Set();
+    const singles = [];
     for (const [dx, dy, dz] of OFFS6) {
       const nb = dim.getBlock({ x: x + dx, y: y + dy, z: z + dz });
-      if (isVault(nb)) validateAndApplyFrom(nb);
+      if (!isVault(nb)) continue;
+      const gid = indexByKey.get(keyOf(nb));
+      if (gid) {
+        queued.add(gid);
+      } else {
+        singles.push(nb);
+      }
     }
+    for (const gid of queued) revalidateGroupId(gid);
+    for (const b of singles) validateIndependentFrom(b);
   });
 }, { blockTypes: [NET_BLOCK_ID] });
