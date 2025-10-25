@@ -470,6 +470,8 @@ function doValidate(nodes, facing, seedBlock) {
     for (const k of rec.keys) indexByKey.set(k, id);
   }
   saveGroups();
+
+  system.run(() => tryMergeAround(seedBlock));
 }
 
 // ===================== Join policy (extended) =====================
@@ -506,6 +508,84 @@ function isProspectiveLayerFull(g, sPros) {
     if (canonicalFacing(facingOf(b)) !== g.facing) return false;
   }
   return true;
+}
+
+function blockFromKey(key) {
+  if (!key) return null;
+  const [dimId, xs, ys, zs] = key.split("|");
+  const dim = world.getDimension(dimId);
+  if (!dim) return null;
+  return dim.getBlock({ x: +xs, y: +ys, z: +zs });
+}
+
+function describeMerge(gA, gB) {
+  if (!gA || !gB) return null;
+  if (gA.dimId !== gB.dimId) return null;
+  if (gA.facing !== gB.facing) return null;
+  if (gA.size !== gB.size) return null;
+
+  const needCount = maskForSize(gA.size).length;
+  const dirF = basisFor(gA.facing).F;
+
+  function countMatches(dirVec) {
+    const matches = [];
+    for (const key of gA.keys) {
+      const [dimId, xs, ys, zs] = key.split("|");
+      const nx = +xs + dirVec[0];
+      const ny = +ys + dirVec[1];
+      const nz = +zs + dirVec[2];
+      const nKey = `${dimId}|${nx}|${ny}|${nz}`;
+      if (gB.keys.has(nKey)) matches.push(key);
+    }
+    return matches;
+  }
+
+  const forward = countMatches(dirF);
+  if (forward.length === needCount) return { key: forward[0] };
+
+  const backward = countMatches([-dirF[0], -dirF[1], -dirF[2]]);
+  if (backward.length === needCount) return { key: backward[0] };
+
+  return null;
+}
+
+function tryMergeAround(seedBlock) {
+  if (!seedBlock) return;
+  const dim = seedBlock.dimension;
+  if (!dim) return;
+  const positions = [
+    seedBlock.location,
+    ...OFFS6.map(([dx, dy, dz]) => ({ x: seedBlock.location.x + dx, y: seedBlock.location.y + dy, z: seedBlock.location.z + dz })),
+  ];
+
+  const ids = new Set();
+  for (const pos of positions) {
+    const key = `${dim.id}|${pos.x}|${pos.y}|${pos.z}`;
+    const gid = indexByKey.get(key);
+    if (gid) ids.add(gid);
+  }
+
+  const arr = [...ids];
+  const seenPairs = new Set();
+  for (let i = 0; i < arr.length; i++) {
+    for (let j = i + 1; j < arr.length; j++) {
+      const idA = arr[i];
+      const idB = arr[j];
+      const pairKey = idA < idB ? `${idA}|${idB}` : `${idB}|${idA}`;
+      if (seenPairs.has(pairKey)) continue;
+      seenPairs.add(pairKey);
+
+      const gA = groups.get(idA);
+      const gB = groups.get(idB);
+      const desc = describeMerge(gA, gB);
+      if (!desc) continue;
+
+      const blk = blockFromKey(desc.key) || blockFromKey([...gA.keys][0]) || blockFromKey([...gB.keys][0]);
+      if (!isVault(blk)) continue;
+
+      system.run(() => validateAndApplyFrom(blk));
+    }
+  }
 }
 
 // ===================== Subscriptions =====================
