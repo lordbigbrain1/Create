@@ -1,0 +1,19 @@
+[
+    {
+        "flipbook_texture": "textures/blocks/gas_block",
+        "atlas_tile": "gas_block",
+        "atlas_index": 0,
+        "ticks_per_frame": 2,
+        "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+        ],
+        "replicate": 1
+    }
+]

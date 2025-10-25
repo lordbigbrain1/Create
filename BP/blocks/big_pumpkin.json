@@ -1,0 +1,180 @@
+{
+  "format_version": "1.21.100",
+  "minecraft:block": {
+    "description": {
+      "identifier": "sag:big_pumpkin",
+      "menu_category": {
+        "category": "construction"
+      },
+      "traits": {
+        "minecraft:placement_direction": {
+          "enabled_states": [
+            "minecraft:cardinal_direction"
+          ]
+        }
+      },
+      "states": {
+        "sag:tier": [
+          "1",
+          "2"
+        ],
+        "sag:segment": [
+          "unit",
+          "face",
+          "back"
+        ],
+        "sag:cell": [
+          "single",
+          "dl",
+          "dr",
+          "ur",
+          "ul"
+        ]
+      }
+    },
+    "components": {
+      "minecraft:display_name": "Big pumpkin",
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 30
+      },
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 7.5,
+        "item_specific_speeds": [
+          {
+            "item": {
+              "tags": "q.all_tags('minecraft:is_pickaxe','minecraft:wooden_tier')"
+            },
+            "destroy_speed": 3.0
+          },
+          {
+            "item": {
+              "tags": "q.all_tags('minecraft:is_pickaxe','minecraft:stone_tier')"
+            },
+            "destroy_speed": 1.8
+          },
+          {
+            "item": {
+              "tags": "q.all_tags('minecraft:is_pickaxe','minecraft:iron_tier')"
+            },
+            "destroy_speed": 1.2
+          },
+          {
+            "item": {
+              "tags": "q.all_tags('minecraft:is_pickaxe','minecraft:diamond_tier')"
+            },
+            "destroy_speed": 0.9
+          },
+          {
+            "item": {
+              "tags": "q.all_tags('minecraft:is_pickaxe','minecraft:netherite_tier')"
+            },
+            "destroy_speed": 0.75
+          }
+        ]
+      },
+      "minecraft:flammable": false,
+      "minecraft:liquid_detection": {
+        "detection_rules": [
+          {
+            "on_liquid_touches": "blocking"
+          }
+        ]
+      },
+      "minecraft:loot": "loot_tables/blocks/vault.json",
+      "minecraft:redstone_conductivity": {
+        "allows_wire_to_step_down": false,
+        "redstone_conductor": true
+      },
+      "minecraft:light_dampening": 15,
+      "minecraft:light_emission": 0,
+      "minecraft:map_color": "#4b5e71",
+      "minecraft:destruction_particles": {
+        "texture": "pumpkin_top"
+      },
+      "minecraft:item_visual": {
+        "geometry": {
+          "identifier": "geometry.big_pumpkin",
+          "bone_visibility": {
+            "unit": "q.block_state('sag:tier') == '1' && q.block_state('sag:segment') == 'unit' && q.block_state('sag:cell') == 'single'"
+          }
+        },
+        "material_instances": {
+          "*": {
+            "texture": "big_pumpkin",
+            "render_method": "opaque"
+          }
+        }
+      },
+      "minecraft:geometry": {
+        "identifier": "geometry.big_pumpkin",
+        "bone_visibility": {
+          "unit": "q.block_state('sag:tier') == '1' && q.block_state('sag:segment') == 'unit' && q.block_state('sag:cell') == 'single'",
+          "face_bottom_right": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'face' && q.block_state('sag:cell') == 'dr'",
+          "face_bottom_left": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'face' && q.block_state('sag:cell') == 'dl'",
+          "back_bottom_right": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'back' && q.block_state('sag:cell') == 'dr'",
+          "back_bottom_left": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'back' && q.block_state('sag:cell') == 'dl'",
+          "face_up_right": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'face' && q.block_state('sag:cell') == 'ur'",
+          "back_up_right": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'back' && q.block_state('sag:cell') == 'ur'",
+          "back_up_left": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'back' && q.block_state('sag:cell') == 'ul'",
+          "face_up_left": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'face' && q.block_state('sag:cell') == 'ul'"
+        }
+      },
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "big_pumpkin",
+          "render_method": "opaque"
+        }
+      }
+    },
+    "permutations": [
+      {
+        "condition": "q.block_state('minecraft:cardinal_direction') == 'south'",
+        "components": {
+          "minecraft:transformation": {
+            "rotation": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('minecraft:cardinal_direction') == 'west'",
+        "components": {
+          "minecraft:transformation": {
+            "rotation": [
+              0,
+              90,
+              0
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('minecraft:cardinal_direction') == 'north'",
+        "components": {
+          "minecraft:transformation": {
+            "rotation": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('minecraft:cardinal_direction') == 'east'",
+        "components": {
+          "minecraft:transformation": {
+            "rotation": [
+              0,
+              90,
+              0
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,155 @@
+{
+	"format_version": "1.21.0",
+	"minecraft:block": {
+		"description": {
+			"identifier": "sag:fluid_pipe_all",
+			"menu_category": {
+				"category": "construction"
+			},
+			"states": {
+				"sag:center_core": [
+					false,
+					true
+				],
+				"sag:has_n": [
+					false,
+					true
+				],
+				"sag:open_n": [
+					false,
+					true
+				],
+				"sag:has_e": [
+					false,
+					true
+				],
+				"sag:open_e": [
+					false,
+					true
+				],
+				"sag:has_s": [
+					false,
+					true
+				],
+				"sag:open_s": [
+					false,
+					true
+				],
+				"sag:has_w": [
+					false,
+					true
+				],
+				"sag:open_w": [
+					false,
+					true
+				],
+				"sag:has_u": [
+					false,
+					true
+				],
+				"sag:open_u": [
+					false,
+					true
+				],
+				"sag:has_d": [
+					false,
+					true
+				],
+				"sag:open_d": [
+					false,
+					true
+				],
+				"sag:mem_dir": [
+					"north",
+					"east",
+					"south",
+					"west",
+					"up",
+					"down"
+				]
+			},
+			"default_state": {
+				"sag:center_core": false,
+				"sag:has_n": false,
+				"sag:open_n": false,
+				"sag:has_e": false,
+				"sag:open_e": false,
+				"sag:has_s": false,
+				"sag:open_s": false,
+				"sag:has_w": false,
+				"sag:open_w": false,
+				"sag:has_u": false,
+				"sag:open_u": false,
+				"sag:has_d": false,
+				"sag:open_d": false,
+				"sag:mem_dir": "north"
+			}
+		},
+		"components": {
+			"minecraft:loot": "loot_tables/blocks/fluid_pipe.json",
+			"minecraft:destructible_by_mining": {
+				"seconds_to_destroy": 2.5
+			},
+			"minecraft:destructible_by_explosion": true,
+			"minecraft:material_instances": {
+				"*": {
+					"texture": "sag_fluid_pipe",
+					"render_method": "opaque"
+				}
+			},
+			"minecraft:geometry": {
+				"identifier": "geometry.sag.fluid_pipe_all",
+				"bone_visibility": {
+					"center_big": "q.block_state('sag:center_core')",
+					"center_up_west_south": "q.block_state('sag:has_u') && q.block_state('sag:has_w') && q.block_state('sag:has_s') && !q.block_state('sag:has_n') && !q.block_state('sag:has_e') && !q.block_state('sag:has_d') && !q.block_state('sag:center_core')",
+					"center_down_west_south": "q.block_state('sag:has_d') && q.block_state('sag:has_w') && q.block_state('sag:has_s') && !q.block_state('sag:has_n') && !q.block_state('sag:has_e') && !q.block_state('sag:has_u') && !q.block_state('sag:center_core')",
+					"center_down_west_north": "q.block_state('sag:has_d') && q.block_state('sag:has_w') && q.block_state('sag:has_n') && !q.block_state('sag:has_e') && !q.block_state('sag:has_s') && !q.block_state('sag:has_u') && !q.block_state('sag:center_core')",
+					"center_up_west_north": "q.block_state('sag:has_u') && q.block_state('sag:has_w') && q.block_state('sag:has_n') && !q.block_state('sag:has_e') && !q.block_state('sag:has_s') && !q.block_state('sag:has_d') && !q.block_state('sag:center_core')",
+					"center_east_south_down": "q.block_state('sag:has_e') && q.block_state('sag:has_s') && q.block_state('sag:has_d') && !q.block_state('sag:has_n') && !q.block_state('sag:has_w') && !q.block_state('sag:has_u') && !q.block_state('sag:center_core')",
+					"center_east_south_up": "q.block_state('sag:has_e') && q.block_state('sag:has_s') && q.block_state('sag:has_u') && !q.block_state('sag:has_n') && !q.block_state('sag:has_w') && !q.block_state('sag:has_d') && !q.block_state('sag:center_core')",
+					"center_east_north_down": "q.block_state('sag:has_e') && q.block_state('sag:has_n') && q.block_state('sag:has_d') && !q.block_state('sag:has_s') && !q.block_state('sag:has_w') && !q.block_state('sag:has_u') && !q.block_state('sag:center_core')",
+					"center_north_up_east": "q.block_state('sag:has_n') && q.block_state('sag:has_u') && q.block_state('sag:has_e') && !q.block_state('sag:has_s') && !q.block_state('sag:has_w') && !q.block_state('sag:has_d') && !q.block_state('sag:center_core')",
+					"center_north_east": "q.block_state('sag:has_n') && q.block_state('sag:has_e') && !q.block_state('sag:has_s') && !q.block_state('sag:has_w') && !q.block_state('sag:has_u') && !q.block_state('sag:has_d') && !q.block_state('sag:center_core')",
+					"center_south_west": "q.block_state('sag:has_s') && q.block_state('sag:has_w') && !q.block_state('sag:has_n') && !q.block_state('sag:has_e') && !q.block_state('sag:has_u') && !q.block_state('sag:has_d') && !q.block_state('sag:center_core')",
+					"center_north_west": "q.block_state('sag:has_n') && q.block_state('sag:has_w') && !q.block_state('sag:has_e') && !q.block_state('sag:has_s') && !q.block_state('sag:has_u') && !q.block_state('sag:has_d') && !q.block_state('sag:center_core')",
+					"center_south_east": "q.block_state('sag:has_s') && q.block_state('sag:has_e') && !q.block_state('sag:has_n') && !q.block_state('sag:has_w') && !q.block_state('sag:has_u') && !q.block_state('sag:has_d') && !q.block_state('sag:center_core')",
+					"center_up_north": "q.block_state('sag:has_u') && q.block_state('sag:has_n') && !q.block_state('sag:has_e') && !q.block_state('sag:has_s') && !q.block_state('sag:has_w') && !q.block_state('sag:has_d') && !q.block_state('sag:center_core')",
+					"center_up_south": "q.block_state('sag:has_u') && q.block_state('sag:has_s') && !q.block_state('sag:has_n') && !q.block_state('sag:has_e') && !q.block_state('sag:has_w') && !q.block_state('sag:has_d') && !q.block_state('sag:center_core')",
+					"center_up_west": "q.block_state('sag:has_u') && q.block_state('sag:has_w') && !q.block_state('sag:has_n') && !q.block_state('sag:has_e') && !q.block_state('sag:has_s') && !q.block_state('sag:has_d') && !q.block_state('sag:center_core')",
+					"center_up_east": "q.block_state('sag:has_u') && q.block_state('sag:has_e') && !q.block_state('sag:has_n') && !q.block_state('sag:has_s') && !q.block_state('sag:has_w') && !q.block_state('sag:has_d') && !q.block_state('sag:center_core')",
+					"center_down_south": "q.block_state('sag:has_d') && q.block_state('sag:has_s') && !q.block_state('sag:has_n') && !q.block_state('sag:has_e') && !q.block_state('sag:has_w') && !q.block_state('sag:has_u') && !q.block_state('sag:center_core')",
+					"center_down_west": "q.block_state('sag:has_d') && q.block_state('sag:has_w') && !q.block_state('sag:has_n') && !q.block_state('sag:has_e') && !q.block_state('sag:has_s') && !q.block_state('sag:has_u') && !q.block_state('sag:center_core')",
+					"center_down_east": "q.block_state('sag:has_d') && q.block_state('sag:has_e') && !q.block_state('sag:has_n') && !q.block_state('sag:has_s') && !q.block_state('sag:has_w') && !q.block_state('sag:has_u') && !q.block_state('sag:center_core')",
+					"center_down_north": "q.block_state('sag:has_d') && q.block_state('sag:has_n') && !q.block_state('sag:has_e') && !q.block_state('sag:has_s') && !q.block_state('sag:has_w') && !q.block_state('sag:has_u') && !q.block_state('sag:center_core')",
+					"center_west_north_south": "q.block_state('sag:has_w') && q.block_state('sag:has_n') && q.block_state('sag:has_s') && !q.block_state('sag:has_e') && !q.block_state('sag:has_u') && !q.block_state('sag:has_d') && !q.block_state('sag:center_core')",
+					"center_east_north_south": "q.block_state('sag:has_e') && q.block_state('sag:has_n') && q.block_state('sag:has_s') && !q.block_state('sag:has_w') && !q.block_state('sag:has_u') && !q.block_state('sag:has_d') && !q.block_state('sag:center_core')",
+					"center_north_west_east": "q.block_state('sag:has_n') && q.block_state('sag:has_w') && q.block_state('sag:has_e') && !q.block_state('sag:has_s') && !q.block_state('sag:has_u') && !q.block_state('sag:has_d') && !q.block_state('sag:center_core')",
+					"center_south_west_east": "q.block_state('sag:has_s') && q.block_state('sag:has_w') && q.block_state('sag:has_e') && !q.block_state('sag:has_n') && !q.block_state('sag:has_u') && !q.block_state('sag:has_d') && !q.block_state('sag:center_core')",
+					"center_down_west_east": "q.block_state('sag:has_d') && q.block_state('sag:has_w') && q.block_state('sag:has_e') && !q.block_state('sag:has_n') && !q.block_state('sag:has_s') && !q.block_state('sag:has_u') && !q.block_state('sag:center_core')",
+					"center_down_north_south": "q.block_state('sag:has_d') && q.block_state('sag:has_n') && q.block_state('sag:has_s') && !q.block_state('sag:has_e') && !q.block_state('sag:has_w') && !q.block_state('sag:has_u') && !q.block_state('sag:center_core')",
+					"center_up_north_south": "q.block_state('sag:has_u') && q.block_state('sag:has_n') && q.block_state('sag:has_s') && !q.block_state('sag:has_e') && !q.block_state('sag:has_w') && !q.block_state('sag:has_d') && !q.block_state('sag:center_core')",
+					"center_up_west_east": "q.block_state('sag:has_u') && q.block_state('sag:has_w') && q.block_state('sag:has_e') && !q.block_state('sag:has_n') && !q.block_state('sag:has_s') && !q.block_state('sag:has_d') && !q.block_state('sag:center_core')",
+					"center_up_east_down": "q.block_state('sag:has_u') && q.block_state('sag:has_e') && q.block_state('sag:has_d') && !q.block_state('sag:has_n') && !q.block_state('sag:has_s') && !q.block_state('sag:has_w') && !q.block_state('sag:center_core')",
+					"center_up_west_down": "q.block_state('sag:has_u') && q.block_state('sag:has_w') && q.block_state('sag:has_d') && !q.block_state('sag:has_n') && !q.block_state('sag:has_e') && !q.block_state('sag:has_s') && !q.block_state('sag:center_core')",
+					"center_up_south_down": "q.block_state('sag:has_u') && q.block_state('sag:has_s') && q.block_state('sag:has_d') && !q.block_state('sag:has_n') && !q.block_state('sag:has_e') && !q.block_state('sag:has_w') && !q.block_state('sag:center_core')",
+					"center_up_north_down": "q.block_state('sag:has_u') && q.block_state('sag:has_n') && q.block_state('sag:has_d') && !q.block_state('sag:has_e') && !q.block_state('sag:has_s') && !q.block_state('sag:has_w') && !q.block_state('sag:center_core')",
+					"center_north_south": "q.block_state('sag:has_n') && q.block_state('sag:has_s') && !q.block_state('sag:has_e') && !q.block_state('sag:has_w') && !q.block_state('sag:has_u') && !q.block_state('sag:has_d') && !q.block_state('sag:center_core')",
+					"center_west_east": "q.block_state('sag:has_w') && q.block_state('sag:has_e') && !q.block_state('sag:has_n') && !q.block_state('sag:has_s') && !q.block_state('sag:has_u') && !q.block_state('sag:has_d') && !q.block_state('sag:center_core')",
+					"center_up_down": "q.block_state('sag:has_u') && q.block_state('sag:has_d') && !q.block_state('sag:has_n') && !q.block_state('sag:has_e') && !q.block_state('sag:has_s') && !q.block_state('sag:has_w') && !q.block_state('sag:center_core')",
+					"bone_small_north": "q.block_state('sag:has_n')",
+					"bone_small_north2": "q.block_state('sag:open_n')",
+					"bone_small_east": "q.block_state('sag:has_e')",
+					"bone_small_east2": "q.block_state('sag:open_e')",
+					"bone_small_south": "q.block_state('sag:has_s')",
+					"bone_small_south2": "q.block_state('sag:open_s')",
+					"bone_small_west": "q.block_state('sag:has_w')",
+					"bone_small_west2": "q.block_state('sag:open_w')",
+					"bone_small_up": "q.block_state('sag:has_u')",
+					"bone_small_up2": "q.block_state('sag:open_u')",
+					"bone_small_down": "q.block_state('sag:has_d')",
+					"bone_small_down2": "q.block_state('sag:open_d')"
+				}
+			}
+		}
+	}
+}

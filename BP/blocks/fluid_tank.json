@@ -1,0 +1,147 @@
+{
+	"format_version": "1.21.80",
+	"minecraft:block": {
+		"description": {
+			"identifier": "sag:fluid_tank",
+			"menu_category": {
+				"category": "construction",
+				"group": "sag:itemGroup.name.fluid"
+			},
+			"states": {
+				"sag:size": [
+					1,
+					2,
+					3
+				],
+				"sag:height": [
+					"single",
+					"bottom",
+					"middle",
+					"top"
+				],
+				"sag:pos_x": [
+					0,
+					1,
+					2
+				],
+				"sag:pos_z": [
+					0,
+					1,
+					2
+				]
+			},
+			"default_state": {
+				"sag:size": 1,
+				"sag:height": "single",
+				"sag:pos_x": 0,
+				"sag:pos_z": 0
+			}
+		},
+		"components": {
+			"minecraft:destructible_by_explosion": true,
+			"minecraft:redstone_conductivity": {
+				"allows_wire_to_step_down": true,
+				"redstone_conductor": false
+			},
+			"minecraft:destructible_by_mining": {
+				"item_specific_speeds": [
+					{
+						"item": "wooden_pickaxe",
+						"destroy_speed": 7.5
+					},
+					{
+						"item": "stone_pickaxe",
+						"destroy_speed": 1.15
+					},
+					{
+						"item": "iron_pickaxe",
+						"destroy_speed": 0.75
+					},
+					{
+						"item": "diamond_pickaxe",
+						"destroy_speed": 0.6
+					},
+					{
+						"item": "netherite_pickaxe",
+						"destroy_speed": 0.5
+					},
+					{
+						"item": "golden_pickaxe",
+						"destroy_speed": 1.25
+					}
+				],
+				"seconds_to_destroy": 15
+			},
+			"minecraft:light_dampening": 15,
+			"minecraft:light_emission": 0,
+			"minecraft:loot": "loot_tables/blocks/fluid_tank.json",
+			"minecraft:material_instances": {
+				"*": {
+					"texture": "fluid_tank",
+					"render_method": "alpha_test"
+				}
+			},
+			"minecraft:geometry": {
+				"identifier": "geometry.fluid_tank",
+				"bone_visibility": {
+					"small": "q.block_state('sag:size') == 1 && q.block_state('sag:height') == 'single'",
+					"small_top": "q.block_state('sag:size') == 1 && q.block_state('sag:height') == 'top'",
+					"small_middle": "q.block_state('sag:size') == 1 && q.block_state('sag:height') == 'middle'",
+					"small_bottom": "q.block_state('sag:size') == 1 && q.block_state('sag:height') == 'bottom'",
+					"medium_unit_left_north": "q.block_state('sag:size') == 2 && q.block_state('sag:height') == 'single' && q.block_state('sag:pos_x') == 0 && q.block_state('sag:pos_z') == 0",
+					"medium_unit_right_north": "q.block_state('sag:size') == 2 && q.block_state('sag:height') == 'single' && q.block_state('sag:pos_x') == 1 && q.block_state('sag:pos_z') == 0",
+					"medium_unit_left_south": "q.block_state('sag:size') == 2 && q.block_state('sag:height') == 'single' && q.block_state('sag:pos_x') == 0 && q.block_state('sag:pos_z') == 1",
+					"medium_unit_right_south": "q.block_state('sag:size') == 2 && q.block_state('sag:height') == 'single' && q.block_state('sag:pos_x') == 1 && q.block_state('sag:pos_z') == 1",
+					"medium_top_left_back": "q.block_state('sag:size') == 2 && q.block_state('sag:height') == 'top' && q.block_state('sag:pos_x') == 0 && q.block_state('sag:pos_z') == 0",
+					"medium_top_right_back": "q.block_state('sag:size') == 2 && q.block_state('sag:height') == 'top' && q.block_state('sag:pos_x') == 1 && q.block_state('sag:pos_z') == 0",
+					"medium_top_left_face": "q.block_state('sag:size') == 2 && q.block_state('sag:height') == 'top' && q.block_state('sag:pos_x') == 0 && q.block_state('sag:pos_z') == 1",
+					"medium_top_right_face": "q.block_state('sag:size') == 2 && q.block_state('sag:height') == 'top' && q.block_state('sag:pos_x') == 1 && q.block_state('sag:pos_z') == 1",
+					"medium_middle_left_back": "q.block_state('sag:size') == 2 && q.block_state('sag:height') == 'middle' && q.block_state('sag:pos_x') == 0 && q.block_state('sag:pos_z') == 0",
+					"medium_middle_right_back": "q.block_state('sag:size') == 2 && q.block_state('sag:height') == 'middle' && q.block_state('sag:pos_x') == 1 && q.block_state('sag:pos_z') == 0",
+					"medium_middle_left_face": "q.block_state('sag:size') == 2 && q.block_state('sag:height') == 'middle' && q.block_state('sag:pos_x') == 0 && q.block_state('sag:pos_z') == 1",
+					"medium_middle_right_face": "q.block_state('sag:size') == 2 && q.block_state('sag:height') == 'middle' && q.block_state('sag:pos_x') == 1 && q.block_state('sag:pos_z') == 1",
+					"medium_bottom_left_back": "q.block_state('sag:size') == 2 && q.block_state('sag:height') == 'bottom' && q.block_state('sag:pos_x') == 0 && q.block_state('sag:pos_z') == 0",
+					"medium_bottom_right_back": "q.block_state('sag:size') == 2 && q.block_state('sag:height') == 'bottom' && q.block_state('sag:pos_x') == 1 && q.block_state('sag:pos_z') == 0",
+					"medium_bottom_left_face": "q.block_state('sag:size') == 2 && q.block_state('sag:height') == 'bottom' && q.block_state('sag:pos_x') == 0 && q.block_state('sag:pos_z') == 1",
+					"medium_bottom_right_face": "q.block_state('sag:size') == 2 && q.block_state('sag:height') == 'bottom' && q.block_state('sag:pos_x') == 1 && q.block_state('sag:pos_z') == 1",
+					"large_unit_left_north": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'single' && q.block_state('sag:pos_x') == 0 && q.block_state('sag:pos_z') == 0",
+					"large_unit_center_north": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'single' && q.block_state('sag:pos_x') == 1 && q.block_state('sag:pos_z') == 0",
+					"large_unit_right_north": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'single' && q.block_state('sag:pos_x') == 2 && q.block_state('sag:pos_z') == 0",
+					"large_unit_middle_left": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'single' && q.block_state('sag:pos_x') == 0 && q.block_state('sag:pos_z') == 1",
+					"large_unit_middle_center": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'single' && q.block_state('sag:pos_x') == 1 && q.block_state('sag:pos_z') == 1",
+					"large_unit_middle_right": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'single' && q.block_state('sag:pos_x') == 2 && q.block_state('sag:pos_z') == 1",
+					"large_unit_left_south": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'single' && q.block_state('sag:pos_x') == 0 && q.block_state('sag:pos_z') == 2",
+					"large_unit_center_south": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'single' && q.block_state('sag:pos_x') == 1 && q.block_state('sag:pos_z') == 2",
+					"large_unit_right_south": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'single' && q.block_state('sag:pos_x') == 2 && q.block_state('sag:pos_z') == 2",
+					"large_top_back_left": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'top' && q.block_state('sag:pos_x') == 0 && q.block_state('sag:pos_z') == 0",
+					"large_top_back_center": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'top' && q.block_state('sag:pos_x') == 1 && q.block_state('sag:pos_z') == 0",
+					"large_top_back_right": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'top' && q.block_state('sag:pos_x') == 2 && q.block_state('sag:pos_z') == 0",
+					"large_top_middle_left": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'top' && q.block_state('sag:pos_x') == 0 && q.block_state('sag:pos_z') == 1",
+					"large_top_middle_center": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'top' && q.block_state('sag:pos_x') == 1 && q.block_state('sag:pos_z') == 1",
+					"large_top_middle_right": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'top' && q.block_state('sag:pos_x') == 2 && q.block_state('sag:pos_z') == 1",
+					"large_top_face_left": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'top' && q.block_state('sag:pos_x') == 0 && q.block_state('sag:pos_z') == 2",
+					"large_top_face_center": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'top' && q.block_state('sag:pos_x') == 1 && q.block_state('sag:pos_z') == 2",
+					"large_top_face_right": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'top' && q.block_state('sag:pos_x') == 2 && q.block_state('sag:pos_z') == 2",
+					"large_middle_back_left": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'middle' && q.block_state('sag:pos_x') == 0 && q.block_state('sag:pos_z') == 0",
+					"large_middle_back_center": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'middle' && q.block_state('sag:pos_x') == 1 && q.block_state('sag:pos_z') == 0",
+					"large_middle_back_right": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'middle' && q.block_state('sag:pos_x') == 2 && q.block_state('sag:pos_z') == 0",
+					"large_middle_middle_left2": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'middle' && q.block_state('sag:pos_x') == 0 && q.block_state('sag:pos_z') == 1",
+					"large_middle_middle_center2": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'middle' && q.block_state('sag:pos_x') == 1 && q.block_state('sag:pos_z') == 1",
+					"large_middle_middle_right2": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'middle' && q.block_state('sag:pos_x') == 2 && q.block_state('sag:pos_z') == 1",
+					"large_middle_face_left": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'middle' && q.block_state('sag:pos_x') == 0 && q.block_state('sag:pos_z') == 2",
+					"large_middle_face_center": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'middle' && q.block_state('sag:pos_x') == 1 && q.block_state('sag:pos_z') == 2",
+					"large_middle_face_right": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'middle' && q.block_state('sag:pos_x') == 2 && q.block_state('sag:pos_z') == 2",
+					"large_bottom_back_left": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'bottom' && q.block_state('sag:pos_x') == 0 && q.block_state('sag:pos_z') == 0",
+					"large_bottom_back_center": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'bottom' && q.block_state('sag:pos_x') == 1 && q.block_state('sag:pos_z') == 0",
+					"large_bottom_back_right": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'bottom' && q.block_state('sag:pos_x') == 2 && q.block_state('sag:pos_z') == 0",
+					"large_bottom_middle_left": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'bottom' && q.block_state('sag:pos_x') == 0 && q.block_state('sag:pos_z') == 1",
+					"large_bottom_middle_center": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'bottom' && q.block_state('sag:pos_x') == 1 && q.block_state('sag:pos_z') == 1",
+					"large_bottom_middle_right": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'bottom' && q.block_state('sag:pos_x') == 2 && q.block_state('sag:pos_z') == 1",
+					"large_bottom_face_left": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'bottom' && q.block_state('sag:pos_x') == 0 && q.block_state('sag:pos_z') == 2",
+					"large_bottom_face_center": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'bottom' && q.block_state('sag:pos_x') == 1 && q.block_state('sag:pos_z') == 2",
+					"large_bottom_face_right": "q.block_state('sag:size') == 3 && q.block_state('sag:height') == 'bottom' && q.block_state('sag:pos_x') == 2 && q.block_state('sag:pos_z') == 2"
+				}
+			}
+		}
+	}
+}

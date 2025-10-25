@@ -1,0 +1,293 @@
+{
+  "format_version": "1.21.100",
+  "minecraft:block": {
+    "description": {
+      "identifier": "sag:vault",
+      "menu_category": {
+        "category": "construction"
+      },
+      "traits": {
+        "minecraft:placement_direction": {
+          "enabled_states": [
+            "minecraft:cardinal_direction"
+          ]
+        }
+      },
+      "states": {
+        "sag:tier": [
+          "1",
+          "2",
+          "3"
+        ],
+        "sag:segment": [
+          "unit",
+          "face",
+          "middle",
+          "back"
+        ],
+        "sag:cell": [
+          "single",
+          "lu",
+          "ru",
+          "lb",
+          "rb",
+          "tl",
+          "tc",
+          "tr",
+          "ml",
+          "mc",
+          "mr",
+          "bl",
+          "bc",
+          "br"
+        ]
+      }
+    },
+    "components": {
+      "minecraft:display_name": "Item vault",
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 30
+      },
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 7.5,
+        "item_specific_speeds": [
+          {
+            "item": {
+              "tags": "q.all_tags('minecraft:is_pickaxe','minecraft:wooden_tier')"
+            },
+            "destroy_speed": 3.0
+          },
+          {
+            "item": {
+              "tags": "q.all_tags('minecraft:is_pickaxe','minecraft:stone_tier')"
+            },
+            "destroy_speed": 1.8
+          },
+          {
+            "item": {
+              "tags": "q.all_tags('minecraft:is_pickaxe','minecraft:iron_tier')"
+            },
+            "destroy_speed": 1.2
+          },
+          {
+            "item": {
+              "tags": "q.all_tags('minecraft:is_pickaxe','minecraft:diamond_tier')"
+            },
+            "destroy_speed": 0.9
+          },
+          {
+            "item": {
+              "tags": "q.all_tags('minecraft:is_pickaxe','minecraft:netherite_tier')"
+            },
+            "destroy_speed": 0.75
+          }
+        ]
+      },
+      "minecraft:flammable": false,
+      "minecraft:liquid_detection": {
+        "detection_rules": [
+          {
+            "on_liquid_touches": "blocking"
+          }
+        ]
+      },
+      "minecraft:loot": "loot_tables/blocks/vault.json",
+      "minecraft:redstone_conductivity": {
+        "allows_wire_to_step_down": false,
+        "redstone_conductor": true
+      },
+      "minecraft:light_dampening": 15,
+      "minecraft:light_emission": 0,
+      "minecraft:map_color": "#4b5e71",
+      "minecraft:destruction_particles": {
+        "texture": "vault_unit"
+      },
+      "minecraft:item_visual": {
+        "geometry": {
+          "identifier": "geometry.sag.vault_all",
+          "bone_visibility": {
+            "small": "q.block_state('sag:tier') == '1' && q.block_state('sag:segment') == 'unit' && q.block_state('sag:cell') == 'single'",
+            "small_face": "q.block_state('sag:tier') == '1' && q.block_state('sag:segment') == 'face' && q.block_state('sag:cell') == 'single'",
+            "small_middle": "q.block_state('sag:tier') == '1' && q.block_state('sag:segment') == 'middle' && q.block_state('sag:cell') == 'single'",
+            "small_back": "q.block_state('sag:tier') == '1' && q.block_state('sag:segment') == 'back' && q.block_state('sag:cell') == 'single'",
+            "medium_unit_left_up": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'unit' && q.block_state('sag:cell') == 'lu'",
+            "medium_unit_left_bottom": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'unit' && q.block_state('sag:cell') == 'lb'",
+            "medium_unit_right_up": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'unit' && q.block_state('sag:cell') == 'ru'",
+            "medium_unit_right_bottom": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'unit' && q.block_state('sag:cell') == 'rb'",
+            "medium_face_left_up": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'face' && q.block_state('sag:cell') == 'lu'",
+            "medium_face_left_bottom": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'face' && q.block_state('sag:cell') == 'lb'",
+            "medium_face_right_up": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'face' && q.block_state('sag:cell') == 'ru'",
+            "medium_face_right_bottom": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'face' && q.block_state('sag:cell') == 'rb'",
+            "medium_middle_left_up": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'middle' && q.block_state('sag:cell') == 'lu'",
+            "medium_middle_left_bottom": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'middle' && q.block_state('sag:cell') == 'lb'",
+            "medium_middle_right_up": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'middle' && q.block_state('sag:cell') == 'ru'",
+            "medium_middle_right_bottom": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'middle' && q.block_state('sag:cell') == 'rb'",
+            "medium_back_left_up": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'back' && q.block_state('sag:cell') == 'lu'",
+            "medium_back_left_bottom": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'back' && q.block_state('sag:cell') == 'lb'",
+            "medium_back_right_up": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'back' && q.block_state('sag:cell') == 'ru'",
+            "medium_back_right_bottom": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'back' && q.block_state('sag:cell') == 'rb'",
+            "large_unit_top_center": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'unit' && q.block_state('sag:cell') == 'tc'",
+            "large_unit_top_left": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'unit' && q.block_state('sag:cell') == 'tl'",
+            "large_unit_top_right": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'unit' && q.block_state('sag:cell') == 'tr'",
+            "large_unit_middle_left": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'unit' && q.block_state('sag:cell') == 'ml'",
+            "large_unit_middle_center": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'unit' && q.block_state('sag:cell') == 'mc'",
+            "large_unit_middle_right": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'unit' && q.block_state('sag:cell') == 'mr'",
+            "large_unit_bottom_left": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'unit' && q.block_state('sag:cell') == 'bl'",
+            "large_unit_bottom_center": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'unit' && q.block_state('sag:cell') == 'bc'",
+            "large_unit_bottom_right": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'unit' && q.block_state('sag:cell') == 'br'",
+            "large_face_top_left": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'face' && q.block_state('sag:cell') == 'tl'",
+            "large_face_top_center": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'face' && q.block_state('sag:cell') == 'tc'",
+            "large_face_top_right": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'face' && q.block_state('sag:cell') == 'tr'",
+            "large_face_middle_left": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'face' && q.block_state('sag:cell') == 'ml'",
+            "large_face_middle_center": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'face' && q.block_state('sag:cell') == 'mc'",
+            "large_face_middle_right": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'face' && q.block_state('sag:cell') == 'mr'",
+            "large_face_bottom_left": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'face' && q.block_state('sag:cell') == 'bl'",
+            "large_face_bottom_center": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'face' && q.block_state('sag:cell') == 'bc'",
+            "large_face_bottom_right": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'face' && q.block_state('sag:cell') == 'br'",
+            "large_middle_top_left": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'middle' && q.block_state('sag:cell') == 'tl'",
+            "large_middle_top_center": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'middle' && q.block_state('sag:cell') == 'tc'",
+            "large_middle_top_right": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'middle' && q.block_state('sag:cell') == 'tr'",
+            "large_middle_middle_left": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'middle' && q.block_state('sag:cell') == 'ml'",
+            "large_middle_middle_center": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'middle' && q.block_state('sag:cell') == 'mc'",
+            "large_middle_middle_right": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'middle' && q.block_state('sag:cell') == 'mr'",
+            "large_middle_bottom_left": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'middle' && q.block_state('sag:cell') == 'bl'",
+            "large_middle_bottom_center": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'middle' && q.block_state('sag:cell') == 'bc'",
+            "large_middle_bottom_right": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'middle' && q.block_state('sag:cell') == 'br'",
+            "large_back_top_left": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'back' && q.block_state('sag:cell') == 'tl'",
+            "large_back_top_center": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'back' && q.block_state('sag:cell') == 'tc'",
+            "large_back_top_right": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'back' && q.block_state('sag:cell') == 'tr'",
+            "large_back_middle_left": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'back' && q.block_state('sag:cell') == 'ml'",
+            "large_back_middle_center": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'back' && q.block_state('sag:cell') == 'mc'",
+            "large_back_middle_right": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'back' && q.block_state('sag:cell') == 'mr'",
+            "large_back_bottom_left": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'back' && q.block_state('sag:cell') == 'bl'",
+            "large_back_bottom_center": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'back' && q.block_state('sag:cell') == 'bc'",
+            "large_back_bottom_right": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'back' && q.block_state('sag:cell') == 'br'"
+          }
+        },
+        "material_instances": {
+          "*": {
+            "texture": "vault",
+            "render_method": "opaque"
+          }
+        }
+      },
+      "minecraft:geometry": {
+        "identifier": "geometry.sag.vault_all",
+        "bone_visibility": {
+          "small": "q.block_state('sag:tier') == '1' && q.block_state('sag:segment') == 'unit' && q.block_state('sag:cell') == 'single'",
+          "small_face": "q.block_state('sag:tier') == '1' && q.block_state('sag:segment') == 'face' && q.block_state('sag:cell') == 'single'",
+          "small_middle": "q.block_state('sag:tier') == '1' && q.block_state('sag:segment') == 'middle' && q.block_state('sag:cell') == 'single'",
+          "small_back": "q.block_state('sag:tier') == '1' && q.block_state('sag:segment') == 'back' && q.block_state('sag:cell') == 'single'",
+          "medium_unit_left_up": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'unit' && q.block_state('sag:cell') == 'lu'",
+          "medium_unit_left_bottom": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'unit' && q.block_state('sag:cell') == 'lb'",
+          "medium_unit_right_up": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'unit' && q.block_state('sag:cell') == 'ru'",
+          "medium_unit_right_bottom": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'unit' && q.block_state('sag:cell') == 'rb'",
+          "medium_face_left_up": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'face' && q.block_state('sag:cell') == 'lu'",
+          "medium_face_left_bottom": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'face' && q.block_state('sag:cell') == 'lb'",
+          "medium_face_right_up": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'face' && q.block_state('sag:cell') == 'ru'",
+          "medium_face_right_bottom": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'face' && q.block_state('sag:cell') == 'rb'",
+          "medium_middle_left_up": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'middle' && q.block_state('sag:cell') == 'lu'",
+          "medium_middle_left_bottom": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'middle' && q.block_state('sag:cell') == 'lb'",
+          "medium_middle_right_up": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'middle' && q.block_state('sag:cell') == 'ru'",
+          "medium_middle_right_bottom": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'middle' && q.block_state('sag:cell') == 'rb'",
+          "medium_back_left_up": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'back' && q.block_state('sag:cell') == 'lu'",
+          "medium_back_left_bottom": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'back' && q.block_state('sag:cell') == 'lb'",
+          "medium_back_right_up": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'back' && q.block_state('sag:cell') == 'ru'",
+          "medium_back_right_bottom": "q.block_state('sag:tier') == '2' && q.block_state('sag:segment') == 'back' && q.block_state('sag:cell') == 'rb'",
+          "large_unit_top_center": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'unit' && q.block_state('sag:cell') == 'tc'",
+          "large_unit_top_left": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'unit' && q.block_state('sag:cell') == 'tl'",
+          "large_unit_top_right": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'unit' && q.block_state('sag:cell') == 'tr'",
+          "large_unit_middle_left": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'unit' && q.block_state('sag:cell') == 'ml'",
+          "large_unit_middle_center": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'unit' && q.block_state('sag:cell') == 'mc'",
+          "large_unit_middle_right": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'unit' && q.block_state('sag:cell') == 'mr'",
+          "large_unit_bottom_left": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'unit' && q.block_state('sag:cell') == 'br'",
+          "large_unit_bottom_center": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'unit' && q.block_state('sag:cell') == 'bc'",
+          "large_unit_bottom_right": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'unit' && q.block_state('sag:cell') == 'bl'",
+          "large_face_top_left": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'face' && q.block_state('sag:cell') == 'tl'",
+          "large_face_top_center": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'face' && q.block_state('sag:cell') == 'tc'",
+          "large_face_top_right": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'face' && q.block_state('sag:cell') == 'tr'",
+          "large_face_middle_left": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'face' && q.block_state('sag:cell') == 'ml'",
+          "large_face_middle_center": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'face' && q.block_state('sag:cell') == 'mc'",
+          "large_face_middle_right": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'face' && q.block_state('sag:cell') == 'mr'",
+          "large_face_bottom_left": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'face' && q.block_state('sag:cell') == 'bl'",
+          "large_face_bottom_center": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'face' && q.block_state('sag:cell') == 'bc'",
+          "large_face_bottom_right": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'face' && q.block_state('sag:cell') == 'br'",
+          "large_middle_top_left": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'middle' && q.block_state('sag:cell') == 'tl'",
+          "large_middle_top_center": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'middle' && q.block_state('sag:cell') == 'tc'",
+          "large_middle_top_right": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'middle' && q.block_state('sag:cell') == 'tr'",
+          "large_middle_middle_left": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'middle' && q.block_state('sag:cell') == 'ml'",
+          "large_middle_middle_center": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'middle' && q.block_state('sag:cell') == 'mc'",
+          "large_middle_middle_right": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'middle' && q.block_state('sag:cell') == 'mr'",
+          "large_middle_bottom_left": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'middle' && q.block_state('sag:cell') == 'bl'",
+          "large_middle_bottom_center": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'middle' && q.block_state('sag:cell') == 'bc'",
+          "large_middle_bottom_right": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'middle' && q.block_state('sag:cell') == 'br'",
+          "large_back_top_left": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'back' && q.block_state('sag:cell') == 'tl'",
+          "large_back_top_center": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'back' && q.block_state('sag:cell') == 'tc'",
+          "large_back_top_right": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'back' && q.block_state('sag:cell') == 'tr'",
+          "large_back_middle_left": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'back' && q.block_state('sag:cell') == 'ml'",
+          "large_back_middle_center": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'back' && q.block_state('sag:cell') == 'mc'",
+          "large_back_middle_right": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'back' && q.block_state('sag:cell') == 'mr'",
+          "large_back_bottom_left": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'back' && q.block_state('sag:cell') == 'bl'",
+          "large_back_bottom_center": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'back' && q.block_state('sag:cell') == 'bc'",
+          "large_back_bottom_right": "q.block_state('sag:tier') == '3' && q.block_state('sag:segment') == 'back' && q.block_state('sag:cell') == 'br'"
+        }
+      },
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "vault",
+          "render_method": "opaque"
+        }
+      }
+    },
+    "permutations": [
+      {
+        "condition": "q.block_state('minecraft:cardinal_direction') == 'south'",
+        "components": {
+          "minecraft:transformation": {
+            "rotation": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('minecraft:cardinal_direction') == 'west'",
+        "components": {
+          "minecraft:transformation": {
+            "rotation": [
+              0,
+              90,
+              0
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('minecraft:cardinal_direction') == 'north'",
+        "components": {
+          "minecraft:transformation": {
+            "rotation": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('minecraft:cardinal_direction') == 'east'",
+        "components": {
+          "minecraft:transformation": {
+            "rotation": [
+              0,
+              90,
+              0
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

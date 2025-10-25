@@ -1,0 +1,28 @@
+{
+	"texture_data": {
+		"fluid_tank": {
+			"textures": "textures/blocks/fluid_tank"
+		},
+		"sag_fluid_pipe": {
+			"textures": "textures/blocks/sag_fluid_pipe"
+		},
+		"sag_gas_pipe": {
+			"textures": "textures/blocks/gas_pipe"
+		},
+		"sag_fluid_pump": {
+			"textures": "textures/blocks/sag_fluid_pump"
+		},
+		"vault": {
+			"textures": "textures/blocks/vault"
+		},
+		"sag_gas_block": {
+			"textures": "textures/blocks/gas_block"
+		},
+		"vault_unit": {
+			"textures": "textures/blocks/vault_unit"
+		},
+		"big_pumpkin": {
+			"textures": "textures/blocks/big_pumpkin"
+		}
+	}
+}

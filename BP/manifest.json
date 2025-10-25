@@ -1,0 +1,72 @@
+{
+	"format_version": 2,
+	"header": {
+		"name": "Steam and Gears",
+		"description": "Steam and Gears",
+		"uuid": "63258e1e-7c92-4dd1-8d72-edcff93f6d2e",
+		"version": [
+			0,
+			0,
+			1
+		],
+		"min_engine_version": [
+			1,
+			21,
+			100
+		]
+	},
+	"modules": [
+		{
+			"type": "data",
+			"uuid": "7b26c137-3415-4f27-9505-931b17b68ee8",
+			"version": [
+				1,
+				0,
+				0
+			]
+		},
+		{
+			"description": "Scripting module",
+			"type": "script",
+			"uuid": "d50dea0d-25c0-4846-94d8-b2fddbab05c4",
+			"language": "javascript",
+			"version": [
+				1,
+				0,
+				0
+			],
+			"entry": "scripts/main.js"
+		}
+	],
+	"dependencies": [
+		{
+			"uuid": "3d126c7d-7bec-461e-8391-e31da8de525d",
+			"version": [
+				0,
+				0,
+				1
+			]
+		},
+		{
+			"module_name": "@minecraft/server",
+			"version": "2.3.0-beta"
+		},
+		{
+			"module_name": "@minecraft/server-ui",
+			"version": "2.0.0"
+		}
+	],
+	"capabilities": [
+		"script_eval"
+	],
+	"metadata": {
+		"generated_with": {
+			"bridge": [
+				"2.7.51"
+			],
+			"dash": [
+				"0.11.7"
+			]
+		}
+	}
+}

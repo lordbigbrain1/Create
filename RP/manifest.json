@@ -1,0 +1,50 @@
+{
+	"format_version": 2,
+	"header": {
+		"name": "Steam and Gears",
+		"description": "Steam and Gears",
+		"uuid": "3d126c7d-7bec-461e-8391-e31da8de525d",
+		"pack_scope": "world",
+		"version": [
+			0,
+			0,
+			1
+		],
+		"min_engine_version": [
+			1,
+			21,
+			100
+		]
+	},
+	"modules": [
+		{
+			"type": "resources",
+			"uuid": "6e1bd6f7-500f-4e19-8d03-51e66d0443f0",
+			"version": [
+				1,
+				0,
+				0
+			]
+		}
+	],
+	"dependencies": [
+		{
+			"uuid": "63258e1e-7c92-4dd1-8d72-edcff93f6d2e",
+			"version": [
+				0,
+				0,
+				1
+			]
+		}
+	],
+	"metadata": {
+		"generated_with": {
+			"bridge": [
+				"2.7.51"
+			],
+			"dash": [
+				"0.11.7"
+			]
+		}
+	}
+}

@@ -1,0 +1,10 @@
+{
+	"format_version": "1.21.40",
+	"sag:fluid_pipe": {
+		"sound": "copper"
+	},
+	"sag:gas_block": {
+		"sound": "stone",
+		"textures": "sag_gas_block"
+	}
+}
