@@ -478,21 +478,21 @@ function doValidate(nodes, facing, seedBlock) {
 }
 
 // ===================== Join policy (extended) =====================
-function findAdjacentValidGroup(block) {
+function findAdjacentValidGroups(block) {
+  const bf = canonicalFacing(facingOf(block));
+  const out = new Map();
   for (const [dx, dy, dz] of OFFS6) {
     const nb = block.dimension.getBlock({ x: block.location.x + dx, y: block.location.y + dy, z: block.location.z + dz });
     if (!nb) continue;
     const gid = indexByKey.get(keyOf(nb));
-    if (!gid) continue;
+    if (!gid || out.has(gid)) continue;
     const g = groups.get(gid);
     if (!g) continue;
-    // dimension & facing match
-    const bf = canonicalFacing(facingOf(block));
     if (g.dimId !== block.dimension.id) continue;
     if (bf && bf !== g.facing) continue;
-    return { group: g, id: gid };
+    out.set(gid, { group: g, id: gid });
   }
-  return null;
+  return [...out.values()];
 }
 
 function toLocalOfGroup(block, g) {
@@ -511,6 +511,95 @@ function isProspectiveLayerFull(g, sPros) {
     if (canonicalFacing(facingOf(b)) !== g.facing) return false;
   }
   return true;
+}
+
+function attemptLengthExtension(block, adj) {
+  const g = adj.group;
+  const loc = toLocalOfGroup(block, g);
+  const sInt = Math.round(loc.s);
+  const uInt = Math.round(loc.u);
+  const tInt = Math.round(loc.t);
+
+  const extendsFront = (sInt === g.sStart - 1);
+  const extendsBack = (sInt === g.sEnd + 1);
+  const insideW = (uInt >= g.uMin && uInt < g.uMin + g.size);
+  const insideH = (tInt >= g.tMin && tInt < g.tMin + g.size);
+
+  if ((extendsFront || extendsBack) && insideW && insideH) {
+    const full = isProspectiveLayerFull(g, sInt);
+    if (full) {
+      const allow = new Set([adj.id]);
+      system.run(() => validateIndependentFrom(block, allow));
+    } else {
+      system.run(() => validateIndependentFrom(block));
+    }
+    return true;
+  }
+
+  return false;
+}
+
+function findCrossSectionExpansionAllowance(block, adj) {
+  const g = adj.group;
+  if (g.size >= 3) return null;
+
+  const dim = world.getDimension(g.dimId);
+  if (!dim) return null;
+
+  const loc = toLocalOfGroup(block, g);
+  const sInt = Math.round(loc.s);
+  if (sInt < g.sStart || sInt > g.sEnd) return null;
+
+  const uInt = Math.round(loc.u);
+  const tInt = Math.round(loc.t);
+
+  const B = basisFor(g.facing);
+  const sizes = [];
+  for (let size = 3; size >= 2; size--) {
+    if (size > g.size) sizes.push(size);
+  }
+  if (!sizes.length) return null;
+
+  for (const size of sizes) {
+    const mask = maskForSize(size);
+    const uStartMin = g.uMin + g.size - size;
+    const uStartMax = g.uMin;
+    const tStartMin = g.tMin + g.size - size;
+    const tStartMax = g.tMin;
+    if (uStartMin > uStartMax || tStartMin > tStartMax) continue;
+
+    for (let uBase = uStartMin; uBase <= uStartMax; uBase++) {
+      if (uInt < uBase || uInt >= uBase + size) continue;
+      if (uBase > g.uMin) continue;
+      if (uBase + size - 1 < g.uMin + g.size - 1) continue;
+
+      for (let tBase = tStartMin; tBase <= tStartMax; tBase++) {
+        if (tInt < tBase || tInt >= tBase + size) continue;
+        if (tBase > g.tMin) continue;
+        if (tBase + size - 1 < g.tMin + g.size - 1) continue;
+
+        let ok = true;
+        const allow = new Set([adj.id]);
+
+        for (let s = g.sStart; s <= g.sEnd && ok; s++) {
+          for (const [uOff, tOff] of mask) {
+            const pos = localToWorld(g.origin, B, s, uBase + uOff, tBase + tOff);
+            const blk = dim.getBlock(pos);
+            if (!isVault(blk)) { ok = false; break; }
+            if (canonicalFacing(facingOf(blk)) !== g.facing) { ok = false; break; }
+            const otherId = indexByKey.get(keyOf(blk));
+            if (otherId) allow.add(otherId);
+          }
+        }
+
+        if (!ok) continue;
+
+        return allow;
+      }
+    }
+  }
+
+  return null;
 }
 
 function scheduleMergeCheck(ids) {
@@ -613,32 +702,21 @@ world.afterEvents.playerPlaceBlock.subscribe((ev) => {
 }, { blockTypes: [NET_BLOCK_ID] });
 
 function handlePlacement(b) {
-  const adj = findAdjacentValidGroup(b);
-  if (adj) {
-    const g = adj.group;
-    const loc = toLocalOfGroup(b, g);
-    const s = loc.s, u = loc.u, t = loc.t;
-
-    const extendsFront = (s === g.sStart - 1);
-    const extendsBack  = (s === g.sEnd + 1);
-    const insideW = (u >= g.uMin && u < g.uMin + g.size);
-    const insideH = (t >= g.tMin && t < g.tMin + g.size);
-
-    if ((extendsFront || extendsBack) && insideW && insideH) {
-      // Only when full new layer is completed we merge/extend
-      const full = isProspectiveLayerFull(g, s);
-      if (full) {
-        const allow = new Set([adj.id]);
-        system.run(() => validateIndependentFrom(b, allow));
-      }
-      else {
-        // not a full layer: assemble as an independent structure to allow side-by-side growth
-        system.run(() => validateIndependentFrom(b));
-      }
-    } else {
-      // touching but not a valid extension -> assemble as an INDEPENDENT structure (do not merge)
-      system.run(() => validateIndependentFrom(b));
+  const adjacent = findAdjacentValidGroups(b);
+  if (adjacent.length) {
+    for (const adj of adjacent) {
+      if (attemptLengthExtension(b, adj)) return;
     }
+
+    for (const adj of adjacent) {
+      const allow = findCrossSectionExpansionAllowance(b, adj);
+      if (allow) {
+        system.run(() => validateIndependentFrom(b, allow));
+        return;
+      }
+    }
+
+    system.run(() => validateIndependentFrom(b));
     return;
   }
 
