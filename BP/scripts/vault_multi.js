@@ -457,6 +457,7 @@ function doValidate(nodes, facing, seedBlock) {
     for (const k of g.keys) indexByKey.delete(k);
     groups.delete(id);
   }
+  const addedIds = [];
   for (const x of tmpNew) {
     const id = nextGroupId++;
     const rec = {
@@ -468,8 +469,57 @@ function doValidate(nodes, facing, seedBlock) {
     };
     groups.set(id, rec);
     for (const k of rec.keys) indexByKey.set(k, id);
+    addedIds.push(id);
   }
   saveGroups();
+
+  for (const id of addedIds) scheduleMergeCheck(id);
+}
+
+function scheduleMergeCheck(id) {
+  const g = groups.get(id);
+  if (!g) return;
+
+  const basis = basisFor(g.facing);
+  const dim = world.getDimension(g.dimId);
+  const mask = maskForSize(g.size);
+
+  function findFlushNeighbor(dir) {
+    const targetS = (dir === -1) ? (g.sStart - 1) : (g.sEnd + 1);
+    let candidate = null;
+    for (const [u, t] of mask) {
+      const pos = localToWorld(g.origin, basis, targetS, g.uMin + u, g.tMin + t);
+      const blk = dim.getBlock(pos);
+      if (!isVault(blk)) return null;
+      if (canonicalFacing(facingOf(blk)) !== g.facing) return null;
+      const otherId = indexByKey.get(keyOf(blk));
+      if (!otherId || otherId === id) return null;
+      if (candidate === null) candidate = otherId;
+      else if (candidate !== otherId) return null;
+    }
+    if (candidate === null) return null;
+    const other = groups.get(candidate);
+    if (!other) return null;
+    if (other.dimId !== g.dimId) return null;
+    if (other.facing !== g.facing) return null;
+    if (other.size !== g.size) return null;
+    if (other.uMin !== g.uMin || other.tMin !== g.tMin) return null;
+    if (dir === -1 && other.sEnd !== targetS) return null;
+    if (dir === 1 && other.sStart !== targetS) return null;
+    return candidate;
+  }
+
+  const neighborId = findFlushNeighbor(-1) ?? findFlushNeighbor(1);
+  if (!neighborId) return;
+
+  const sampleKey = g.keys.values().next().value;
+  if (!sampleKey) return;
+  const [dimId, x, y, z] = sampleKey.split("|");
+  const dimSample = world.getDimension(dimId);
+  const block = dimSample.getBlock({ x: +x, y: +y, z: +z });
+  if (!isVault(block)) return;
+
+  system.run(() => validateAndApplyFrom(block));
 }
 
 // ===================== Join policy (extended) =====================
